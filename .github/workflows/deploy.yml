@@ -7,11 +7,11 @@ on:
 
 jobs:
   deploy:
-    name: Push to EC2
+    name: Deploy to EC2 Instance
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout the code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Deploy to EC2 via SSH
@@ -22,12 +22,21 @@ jobs:
           key: ${{ secrets.PRIVATE_SSH_KEY }}
           port: 22
           script: |
-            cd ~
-            rm -rf 100devs-ci-cd
-            git clone https://github.com/annoy004/ci-cd_100xdevs.git 100devs-ci-cd
-            cd 100devs-ci-cd
-            npm install
-            npm run build
-            pm2 start "npm run start" --name app
+            cd ~/100devs-ci-cd
 
+            echo "🧹 Pulling latest code..."
+            git pull origin main
+
+            echo "📦 Installing dependencies..."
+            npm install --force
+
+            echo "🏗️ Building project..."
+            npm run build
+
+            echo "🚀 Restarting app with PM2..."
+            pm2 delete all || true
+            pm2 start "npm run start -- -H 0.0.0.0" --name app
+            pm2 save
+
+            echo "✅ Deployment completed successfu
 
