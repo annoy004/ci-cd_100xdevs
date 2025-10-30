@@ -28,4 +28,6 @@ jobs:
             cd 100devs-ci-cd
             npm install
             npm run build
-            pm2 restart all || pm2 start npm --name "ci-cd_100xdevs" -- run start
+            pm2 delete all || true
+            pm2 start npm --name "next-app" -- run start
+
