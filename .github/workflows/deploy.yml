@@ -14,18 +14,32 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v4
 
-      - name: executing remote ssh commands using password
+      - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: 16.171.71.49
           username: ubuntu
           key: ${{ secrets.PRIVATE_SSH_KEY }}
-
           port: 22
-          script:  |
-            cd 100devs-ci-cd
-            git pull
+          script: |
+            # Navigate to your project directory or clone if not present
+            if [ -d "100devs-ci-cd" ]; then
+              cd 100devs-ci-cd
+              git pull origin main
+            else
+              git clone https://github.com/<your-username>/ci-cd_100xdevs.git 100devs-ci-cd
+              cd 100devs-ci-cd
+            fi
+
+            # Install dependencies and build project
             npm install
             npm run build
-            npm run start
 
+            # Restart your app (choose one method below)
+            # Option 1: Start directly (for testing)
+            # npm run start
+
+            # Option 2: Use PM2 for persistent service
+            pm2 restart all || pm2 start npm --name "ci-cd_100xdevs" -- run start
+
+            echo "🚀 Deployment completed successfully!"
