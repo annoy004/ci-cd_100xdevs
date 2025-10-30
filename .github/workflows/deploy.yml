@@ -22,24 +22,10 @@ jobs:
           key: ${{ secrets.PRIVATE_SSH_KEY }}
           port: 22
           script: |
-            # Navigate to your project directory or clone if not present
-            if [ -d "100devs-ci-cd" ]; then
-              cd 100devs-ci-cd
-              git pull origin main
-            else
-              git clone https://github.com/<your-username>/ci-cd_100xdevs.git 100devs-ci-cd
-              cd 100devs-ci-cd
-            fi
-
-            # Install dependencies and build project
+            cd ~
+            rm -rf 100devs-ci-cd
+            git clone https://github.com/annoy004/ci-cd_100xdevs.git 100devs-ci-cd
+            cd 100devs-ci-cd
             npm install
             npm run build
-
-            # Restart your app (choose one method below)
-            # Option 1: Start directly (for testing)
-            # npm run start
-
-            # Option 2: Use PM2 for persistent service
             pm2 restart all || pm2 start npm --name "ci-cd_100xdevs" -- run start
-
-            echo "🚀 Deployment completed successfully!"
