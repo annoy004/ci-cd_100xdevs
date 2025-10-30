@@ -25,7 +25,7 @@ export default function Home() {
           href="/celebrate"
           className="mt-4 inline-block rounded-full bg-foreground text-background px-6 py-3 text-sm font-semibold hover:opacity-90 transition"
         >
-          Open your gift
+          Open your gift xxx
         </Link>
       </main>
     </div>
