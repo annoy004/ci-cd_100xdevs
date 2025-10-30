@@ -22,21 +22,22 @@ jobs:
           key: ${{ secrets.PRIVATE_SSH_KEY }}
           port: 22
           script: |
-            cd ~/100devs-ci-cd
+              cd ~/100devs-ci-cd
 
-            echo "🧹 Pulling latest code..."
-            git pull origin main
+              echo "🧹 Pulling latest code..."
+              git pull origin main
 
-            echo "📦 Installing dependencies..."
-            npm install --force
+              echo "📦 Installing dependencies..."
+              npm install --force
 
-            echo "🏗️ Building project..."
-            npm run build
+              echo "🏗️ Building project..."
+              npm run build
 
-            echo "🚀 Restarting app with PM2..."
-            pm2 delete all || true
-            pm2 start "npm run start -- -H 0.0.0.0" --name app
-            pm2 save
+              echo "🚀 Restarting app with PM2..."
+              pm2 delete all || true
+              pm2 start 'npm run start -- -H 0.0.0.0' --name app
+              pm2 save
 
-            echo "✅ Deployment completed successfu
+              echo "✅ Deployment completed successfully!"
+            
 
